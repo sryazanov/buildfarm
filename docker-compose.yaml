@@ -1,0 +1,24 @@
+version: '3'
+services:
+  server:
+    restart: unless-stopped
+    image: bazelbuild/buildfarm-server
+    command: ["/config/server.config"]
+    volumes:
+      - ./config:/config:ro
+    ports:
+      - "8980:8980/tcp"
+  worker:
+    restart: unless-stopped
+    image: bazelbuild/buildfarm-worker
+    command: ["/config/worker.config"]
+    volumes:
+      - ./config:/config:ro
+      - ./worker:/tmp/worker
+    expose:
+      - "8981"
+  redis:
+    restart: unless-stopped
+    image: redis
+    expose:
+      - "6379"
